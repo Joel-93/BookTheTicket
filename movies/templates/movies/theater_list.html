@@ -1,0 +1,120 @@
+{% extends "users/base.html" %}
+{% block content %}
+
+<div class="container py-5">
+
+  <!-- MOVIE TITLE -->
+  <div class="text-center mb-5">
+    <h2 class="fw-bold">{{ movie.name }}</h2>
+    <p class="text-muted">Select a theatre & showtime</p>
+  </div>
+
+  {% if theaters %}
+    {% for theater in theaters %}
+    <div class="theatre-card mb-4">
+
+      <!-- THEATRE HEADER -->
+      <div class="d-flex justify-content-between align-items-start flex-wrap">
+        <div>
+          <h5 class="fw-semibold mb-2">
+            {{ theater.name }} Theatre
+          </h5>
+
+          <!-- FACILITIES -->
+          <div class="theatre-icons">
+            <span><i class="fas fa-mobile-alt"></i> M-Ticket</span>
+            <span><i class="fas fa-utensils"></i> Food</span>
+            <span><i class="fas fa-parking"></i> Parking</span>
+            <span><i class="fas fa-wheelchair"></i> Access</span>
+            <span><i class="fas fa-glasses"></i> 3D</span>
+          </div>
+        </div>
+
+        <!-- SHOW TIME -->
+        <div class="text-end mt-3 mt-md-0">
+          <a href="{% url 'book_seats' theater.id %}" class="time-btn">
+            {{ theater.time }}
+            <small>Book Now</small>
+          </a>
+        </div>
+      </div>
+
+    </div>
+    {% endfor %}
+  {% else %}
+    <div class="text-center text-muted mt-5">
+      <p>No theatres available for this movie.</p>
+    </div>
+  {% endif %}
+
+  <!-- INFO -->
+  <div class="mt-4 text-muted small d-flex align-items-center gap-2">
+    <i class="fas fa-circle text-warning"></i>
+    Non-cancellable booking
+  </div>
+
+</div>
+
+<!-- FONT AWESOME -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+:root {
+  --primary-blue: #003cff;
+}
+
+/* THEATRE CARD */
+.theatre-card {
+  background: #fff;
+  border-radius: 14px;
+  padding: 22px;
+  box-shadow: 0 8px 22px rgba(0,0,0,.08);
+  transition: all .25s ease;
+}
+
+.theatre-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 14px 32px rgba(0,0,0,.14);
+}
+
+/* ICONS */
+.theatre-icons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  font-size: 14px;
+  color: #555;
+}
+
+.theatre-icons i {
+  color: var(--primary-blue);
+  margin-right: 4px;
+}
+
+/* TIME BUTTON */
+.time-btn {
+  display: inline-block;
+  border: 2px solid var(--primary-blue);
+  border-radius: 10px;
+  padding: 10px 16px;
+  text-align: center;
+  color: var(--primary-blue);
+  text-decoration: none;
+  font-weight: 600;
+  transition: all .25s ease;
+  min-width: 120px;
+}
+
+.time-btn small {
+  display: block;
+  font-size: 11px;
+  font-weight: normal;
+}
+
+.time-btn:hover {
+  background: var(--primary-blue);
+  color: #fff;
+}
+</style>
+
+{% endblock %}

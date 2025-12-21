@@ -1,0 +1,79 @@
+{% extends "users/base.html" %}
+
+{% block title %}Contact Us | BookMySeat{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-8 col-lg-6">
+
+    <div class="card shadow-sm border-0">
+      <div class="card-body p-4">
+
+        <h3 class="text-center mb-3">
+          <i class="bi bi-envelope-fill"></i> Contact Us
+        </h3>
+
+        <p class="text-center text-muted mb-4">
+          Have a question or facing an issue with booking?  
+          Reach out to us and we’ll get back to you.
+        </p>
+
+        <form method="post">
+          {% csrf_token %}
+
+          <div class="mb-3">
+            <label class="form-label">Name</label>
+            <input
+              type="text"
+              class="form-control"
+              name="name"
+              placeholder="Your full name"
+              required
+            />
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Email</label>
+            <input
+              type="email"
+              class="form-control"
+              name="email"
+              placeholder="you@example.com"
+              required
+            />
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Message</label>
+            <textarea
+              class="form-control"
+              name="message"
+              rows="4"
+              placeholder="Write your message here..."
+              required
+            ></textarea>
+          </div>
+
+          <div class="d-grid">
+            <button type="submit" class="btn btn-success">
+              Send Message
+            </button>
+          </div>
+        </form>
+
+      </div>
+    </div>
+
+    <!-- Contact Info -->
+    <div class="text-center mt-4 text-muted small">
+      <p class="mb-1">
+        <i class="bi bi-telephone-fill"></i> +91 98765 43210
+      </p>
+      <p class="mb-0">
+        <i class="bi bi-geo-alt-fill"></i> Chennai, India
+      </p>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

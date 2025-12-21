@@ -1,0 +1,170 @@
+{% extends "users/base.html" %}
+{% block content %}
+
+<div class="container py-5">
+  <div class="row g-4">
+
+    <!-- LEFT : PROFILE SUMMARY -->
+    <div class="col-lg-4">
+      <div class="profile-card text-center">
+        <div class="avatar mb-3">
+          <i class="bi bi-person-fill"></i>
+        </div>
+
+        <h5 class="fw-semibold mb-1">{{ user.username }}</h5>
+        <p class="text-muted small mb-3">
+          {{ user.email|default:"No email added" }}
+        </p>
+
+        <a href="{% url 'password_reset' %}" class="btn btn-outline-primary w-100">
+          Reset Password
+        </a>
+      </div>
+    </div>
+
+    <!-- RIGHT : DETAILS -->
+    <div class="col-lg-8">
+
+      <!-- UPDATE PROFILE -->
+      <div class="content-card mb-4">
+        <h5 class="section-title">Update Profile</h5>
+
+        <form method="POST">
+          {% csrf_token %}
+
+          <div class="row g-3">
+            {% for field in u_form %}
+              <div class="col-md-6">
+                <label class="form-label small fw-semibold">
+                  {{ field.label }}
+                </label>
+                {{ field }}
+                {% if field.errors %}
+                  <div class="text-danger small">{{ field.errors }}</div>
+                {% endif %}
+              </div>
+            {% endfor %}
+          </div>
+
+          <button class="btn btn-primary w-100 mt-4">
+            Save Changes
+          </button>
+        </form>
+      </div>
+
+      <!-- BOOKINGS -->
+      <div class="content-card">
+        <h5 class="section-title">Your Bookings</h5>
+
+        {% if bookings %}
+          <div class="row g-3">
+            {% for booking in bookings %}
+              <div class="col-md-6">
+                <div class="booking-card">
+                  <h6 class="mb-1">{{ booking.movie.name }}</h6>
+                  <p class="small text-muted mb-1">
+                    {{ booking.theater.name }}
+                  </p>
+                  <p class="small mb-1">
+                    Seat: <strong>{{ booking.seat.seat_number }}</strong>
+                  </p>
+                  <p class="small text-muted mb-0">
+                    {{ booking.booked_at|date:"d M Y, h:i A" }}
+                  </p>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        {% else %}
+          <div class="text-center py-4 text-muted">
+            <i class="bi bi-ticket-perforated fs-2"></i>
+            <p class="mt-2 mb-0">No bookings yet</p>
+          </div>
+        {% endif %}
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<style>
+/* ======================
+   GENERAL FORM STYLING
+====================== */
+input, select {
+  border-radius: 8px !important;
+  border: 1px solid #ced4da;
+}
+input:focus, select:focus {
+  border-color: #003cff;
+  box-shadow: 0 0 0 0.2rem rgba(0,60,255,.15);
+}
+
+/* ======================
+   PROFILE CARD
+====================== */
+.profile-card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 30px;
+  box-shadow: 0 8px 24px rgba(0,0,0,.08);
+  transition: transform .25s ease, box-shadow .25s ease;
+}
+.profile-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 28px rgba(0,60,255,.15);
+}
+
+.avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: #003cff;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 36px;
+  margin: auto;
+}
+
+/* ======================
+   CONTENT CARD
+====================== */
+.content-card {
+  background: #fff;
+  border-radius: 16px;
+  padding: 25px;
+  box-shadow: 0 8px 24px rgba(0,0,0,.08);
+}
+
+/* ======================
+   SECTION TITLE
+====================== */
+.section-title {
+  font-weight: 600;
+  margin-bottom: 20px;
+  border-left: 4px solid #003cff;
+  padding-left: 10px;
+  color: #003cff;
+}
+
+/* ======================
+   BOOKING CARD
+====================== */
+.booking-card {
+  background: #f9faff;
+  border: 1px solid #e2e6ff;
+  border-radius: 12px;
+  padding: 16px;
+  transition: all .25s ease;
+}
+.booking-card:hover {
+  background: #fff;
+  transform: translateY(-4px);
+  box-shadow: 0 10px 22px rgba(0,60,255,.15);
+  border-color: #003cff;
+}
+</style>
+
+{% endblock %}
