@@ -7,6 +7,8 @@ urlpatterns = [
     path('register/', views.register, name='register'),
     path('profile/', views.profile, name='profile'),
     path('contact/', views.contact, name='contact'),
+    path("admin-login/", views.admin_login, name="admin_login"),
+    path("admin/dashboard/", views.admin_dashboard, name="admin_dashboard"),
 
     # ✅ SINGLE logout (no duplicates)
     path(

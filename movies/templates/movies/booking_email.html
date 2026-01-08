@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Booking Confirmation</title>
+</head>
+<body style="font-family: Arial, sans-serif; background:#f5f5f5; padding:20px;">
+
+  <div style="max-width:600px; margin:auto; background:#ffffff; padding:20px; border-radius:8px;">
+    
+    <h2 style="color:#003cff;">🎟 Booking Confirmed</h2>
+
+    <p>Hello <strong>{{ user.username }}</strong>,</p>
+
+    <p>Your ticket has been successfully booked. Here are your booking details:</p>
+
+    <table style="width:100%; border-collapse:collapse;">
+      <tr>
+        <td><strong>Movie</strong></td>
+        <td>{{ movie.name }}</td>
+      </tr>
+      <tr>
+        <td><strong>Theater</strong></td>
+        <td>{{ theater.name }}</td>
+      </tr>
+      <tr>
+        <td><strong>Show Time</strong></td>
+        <td>{{ theater.time }}</td>
+      </tr>
+      <tr>
+        <td><strong>Seat(s)</strong></td>
+        <td>{{ seats }}</td>
+      </tr>
+      <tr>
+        <td><strong>Booking Date</strong></td>
+        <td>{{ booking_date }}</td>
+      </tr>
+    </table>
+
+    <p style="margin-top:20px;">
+      Enjoy your movie! 🍿  
+      <br><br>
+      <strong>– BookTheTicket Team</strong>
+    </p>
+
+  </div>
+
+</body>
+</html>

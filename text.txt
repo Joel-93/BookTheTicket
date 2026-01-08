@@ -1,0 +1,2 @@
+Test API Key = rzp_test_RuybHRB3m5btBx
+Test Key Secret = 7OMHpce2P6AD0V6PmHzDYFcV

@@ -1,0 +1,90 @@
+{% extends "users/base.html" %}
+{% block content %}
+
+<div class="container py-4">
+
+  <h2 class="fw-bold mb-4">Admin Dashboard</h2>
+
+  <!-- METRICS -->
+  <div class="row g-4 mb-4">
+
+    <div class="col-md-3">
+      <div class="card shadow-sm border-0">
+        <div class="card-body">
+          <h6>Total Bookings</h6>
+          <h3>{{ total_bookings }}</h3>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="card shadow-sm border-0">
+        <div class="card-body">
+          <h6>Total Revenue</h6>
+          <h3>₹ {{ total_revenue }}</h3>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="card shadow-sm border-0">
+        <div class="card-body">
+          <h6>Popular Movie</h6>
+          <h5>
+            {{ popular_movie.movie__name|default:"—" }}
+          </h5>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-3">
+      <div class="card shadow-sm border-0">
+        <div class="card-body">
+          <h6>Busiest Theater</h6>
+          <h5>
+            {{ busiest_theater.theater__name|default:"—" }}
+          </h5>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- RECENT BOOKINGS -->
+  <div class="card shadow-sm border-0">
+    <div class="card-body">
+      <h5 class="mb-3">Recent Bookings</h5>
+
+      <table class="table table-sm">
+        <thead>
+          <tr>
+            <th>User</th>
+            <th>Movie</th>
+            <th>Theater</th>
+            <th>Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for b in recent_bookings %}
+            <tr>
+              <td>{{ b.user.username }}</td>
+              <td>{{ b.movie.name }}</td>
+              <td>{{ b.theater.name }}</td>
+              <td>{{ b.booked_at|date:"d M Y, h:i A" }}</td>
+            </tr>
+          {% empty %}
+            <tr>
+              <td colspan="4" class="text-center text-muted">
+                No bookings yet
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+    </div>
+  </div>
+
+</div>
+
+{% endblock %}

@@ -1,164 +1,167 @@
 {% extends "users/base.html" %}
 {% block content %}
 
+<style>
+/* ===== FILTER BAR ===== */
+.filter-bar {
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 20px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+  margin-bottom: 40px;
+}
+
+.filter-bar .form-control,
+.filter-bar .form-select {
+  height: 48px;
+  border-radius: 10px;
+}
+
+.filter-bar button {
+  height: 48px;
+  border-radius: 10px;
+  font-weight: 600;
+}
+
+/* ===== MOVIE CARD ===== */
+.movie-card {
+  background: #fff;
+  border-radius: 18px;
+  overflow: hidden;
+  height: 100%;
+  box-shadow: 0 12px 35px rgba(0,0,0,0.1);
+  transition: transform .3s ease, box-shadow .3s ease;
+}
+
+.movie-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 45px rgba(0,0,0,0.18);
+}
+
+.movie-card img {
+  width: 100%;
+  height: 320px;
+  object-fit: cover;
+}
+
+.movie-body {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  height: calc(100% - 320px);
+}
+
+.movie-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.movie-meta {
+  font-size: 0.85rem;
+  color: #6c757d;
+  margin-bottom: 10px;
+}
+
+.movie-rating {
+  font-size: 0.9rem;
+  margin-bottom: 15px;
+}
+
+.movie-body a {
+  margin-top: auto;
+  border-radius: 10px;
+  font-weight: 500;
+}
+</style>
+
 <div class="container py-5">
 
   <!-- PAGE TITLE -->
   <h2 class="text-center fw-bold mb-4">Explore Movies</h2>
 
-  <!-- SEARCH BAR -->
-  <div class="row justify-content-center mb-5">
-    <div class="col-md-8">
-      <div class="search-box">
+  <!-- FILTER BAR -->
+  <form method="get" class="filter-bar">
+    <div class="row g-3 align-items-end">
+
+      <div class="col-lg-4 col-md-12">
+        <label class="form-label fw-semibold">Search</label>
         <input
           type="text"
-          id="movieSearch"
-          class="form-control form-control-lg"
-          placeholder="Search movies..."
-          autocomplete="off"
-        />
-        <button class="search-btn">
-          <i class="fas fa-search"></i>
+          name="search"
+          class="form-control"
+          placeholder="Search by movie name"
+          value="{{ request.GET.search }}"
+        >
+      </div>
+
+      <div class="col-lg-3 col-md-6">
+        <label class="form-label fw-semibold">Genre</label>
+        <select name="genre" class="form-select">
+          <option value="">All Genres</option>
+          {% for g in genres %}
+            <option value="{{ g }}" {% if selected_genre == g %}selected{% endif %}>
+              {{ g }}
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="col-lg-3 col-md-6">
+        <label class="form-label fw-semibold">Language</label>
+        <select name="language" class="form-select">
+          <option value="">All Languages</option>
+          {% for l in languages %}
+            <option value="{{ l }}" {% if selected_language == l %}selected{% endif %}>
+              {{ l }}
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="col-lg-2 col-md-12 d-grid">
+        <button type="submit" class="btn btn-primary">
+          Apply Filters
         </button>
       </div>
+
     </div>
-  </div>
+  </form>
 
   <!-- MOVIE GRID -->
-  <div class="row g-4" id="movieGrid">
+  <div class="row g-4">
     {% for movie in movies %}
-      <div class="col-lg-4 col-md-6 movie-item">
+      <div class="col-xl-3 col-lg-4 col-md-6">
         <div class="movie-card">
 
-          <!-- IMAGE -->
-          <div class="movie-image">
-            <img src="{{ movie.image.url }}" alt="{{ movie.name }}">
-          </div>
+          <img src="{{ movie.image.url }}" alt="{{ movie.name }}">
 
-          <!-- CONTENT -->
           <div class="movie-body">
-            <h5 class="movie-title">{{ movie.name }}</h5>
-
-            <div class="movie-meta">
-              <span class="rating">⭐ {{ movie.rating }}</span>
+            <div>
+              <div class="movie-title">{{ movie.name }}</div>
+              <div class="movie-meta">
+                {{ movie.genre }} • {{ movie.language }}
+              </div>
+              <div class="movie-rating">
+                ⭐ {{ movie.rating }}
+              </div>
             </div>
 
-            <p class="cast">
-              <strong>Cast:</strong> {{ movie.cast }}
-            </p>
-
-            <a href="{% url 'theater_list' movie.id %}" class="btn view-btn">
-              View Theaters →
+            <a href="{% url 'theater_list' movie.id %}"
+               class="btn btn-outline-primary w-100">
+              View Theaters
             </a>
           </div>
 
         </div>
       </div>
     {% empty %}
-      <div class="col-12 text-center">
-        <p class="lead text-muted">No movies available</p>
+      <div class="col-12 text-center text-muted fs-5">
+        No movies found
       </div>
     {% endfor %}
   </div>
 
 </div>
-
-<!-- FONT AWESOME -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
-
-<style>
-/* ================= SEARCH ================= */
-.search-box {
-  position: relative;
-}
-.search-box input {
-  padding-right: 60px;
-  border-radius: 12px;
-}
-.search-btn {
-  position: absolute;
-  right: 8px;
-  top: 50%;
-  transform: translateY(-50%);
-  background: #003cff;
-  border: none;
-  color: #fff;
-  padding: 10px 14px;
-  border-radius: 8px;
-}
-
-/* ================= MOVIE CARD ================= */
-.movie-card {
-  background: #fff;
-  border-radius: 18px;
-  overflow: hidden;
-  box-shadow: 0 10px 25px rgba(0,0,0,.08);
-  transition: transform .3s ease, box-shadow .3s ease;
-}
-.movie-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 16px 40px rgba(0,60,255,.25);
-}
-
-.movie-image img {
-  width: 100%;
-  height: 300px;
-  object-fit: cover;
-}
-
-.movie-body {
-  padding: 18px;
-}
-
-.movie-title {
-  font-weight: 600;
-  margin-bottom: 6px;
-}
-
-.rating {
-  font-size: 14px;
-  color: #f4b400;
-}
-
-.cast {
-  font-size: 14px;
-  color: #555;
-  margin-bottom: 14px;
-}
-
-.view-btn {
-  width: 100%;
-  border: 2px solid #003cff;
-  color: #003cff;
-  font-weight: 500;
-  border-radius: 10px;
-  padding: 10px;
-  transition: all .25s ease;
-}
-.view-btn:hover {
-  background: #003cff;
-  color: #fff;
-}
-</style>
-
-<script>
-/* ================= LIVE SEARCH ================= */
-const searchInput = document.getElementById("movieSearch");
-const movieItems = document.querySelectorAll(".movie-item");
-
-searchInput.addEventListener("keyup", function () {
-  const query = this.value.toLowerCase();
-
-  movieItems.forEach(item => {
-    const title = item.querySelector(".movie-title").innerText.toLowerCase();
-
-    if (title.includes(query)) {
-      item.style.display = "block";
-    } else {
-      item.style.display = "none";
-    }
-  });
-});
-</script>
 
 {% endblock %}

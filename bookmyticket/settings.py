@@ -26,7 +26,13 @@ SECRET_KEY = "django-insecure-^+7s8f(9p(i2_#cjb$qft(120&5r(1eory1t@if513r%38u=g5
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['.vercel.app']
+ALLOWED_HOSTS = [
+    "127.0.0.1",
+    "localhost",
+    ".vercel.app",
+    ".onrender.com",
+]
+
 
 
 # Application definition
@@ -53,7 +59,16 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 AUTH_USER_MODEL = 'auth.User'
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+
+EMAIL_HOST_USER = 'jasjoel45@gmail.com'
+EMAIL_HOST_PASSWORD = 'kjkk baun brvn fjag'
+
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR , 'media')
@@ -89,7 +104,13 @@ DATABASES = {
         "NAME": BASE_DIR / "db.sqlite3",
     }
 }
-DATABASES["default"] = dj_database_url.parse('postgresql://django_booktheticket_user:urS4IVNiMHyQ3w0G4HeT8LzXTbu8nvRa@dpg-d544a14hg0os7398horg-a.virginia-postgres.render.com/django_booktheticket')
+DATABASES = {
+  'default': dj_database_url.parse(
+    'postgresql://django_booktheticket_user:urS4IVNiMHyQ3w0G4HeT8LzXTbu8nvRa@dpg-d544a14hg0os7398horg-a.virginia-postgres.render.com/django_booktheticket',
+    conn_max_age=600,
+    ssl_require=True
+  )
+}
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
 
@@ -130,3 +151,5 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+RAZORPAY_KEY_ID = "rzp_test_RuybHRB3m5btBx"
+RAZORPAY_KEY_SECRET = "7OMHpce2P6AD0V6PmHzDYFcV"

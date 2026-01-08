@@ -1,178 +1,180 @@
-{% extends "users/base.html" %}
+{% extends 'users/base.html' %}
 {% block content %}
+  <div class="container py-5">
+    <!-- MOVIE / THEATER INFO -->
+    <div class="card shadow-sm border-0 rounded-4 mb-4">
+      <div class="card-body d-flex justify-content-between align-items-center flex-wrap">
+        <div>
+          <h4 class="fw-bold mb-1">{{ theaters.movie.name }}</h4>
+          <p class="text-muted mb-0">{{ theaters.name }} • {{ theaters.time }}</p>
+        </div>
 
-<div class="container py-5">
-
-  <!-- MOVIE / THEATER INFO -->
-  <div class="card shadow-sm border-0 rounded-4 mb-4">
-    <div class="card-body d-flex justify-content-between align-items-center flex-wrap">
-      <div>
-        <h4 class="fw-bold mb-1">{{ theaters.movie.name }}</h4>
-        <p class="text-muted mb-0">
-          {{ theaters.name }} • {{ theaters.time }}
-        </p>
-      </div>
-
-      <div class="mt-3 mt-md-0">
-        <span class="badge bg-primary me-2">2D</span>
-        <span class="badge bg-primary me-2">3D</span>
-        <span class="badge bg-primary me-2">IMAX</span>
-        <span class="badge bg-dark">{{ seats|length }} Seats</span>
+        <div class="mt-3 mt-md-0">
+          <span class="badge bg-primary me-2">2D</span>
+          <span class="badge bg-primary me-2">3D</span>
+          <span class="badge bg-primary me-2">IMAX</span>
+          <span class="badge bg-dark">{{ seats|length }} Seats</span>
+        </div>
       </div>
     </div>
-  </div>
 
-  <!-- SEAT SELECTION -->
-  <div class="card shadow-sm border-0 rounded-4">
-    <div class="card-body">
+    <!-- SEAT SELECTION -->
+    <div class="card shadow-sm border-0 rounded-4">
+      <div class="card-body">
+        <h5 class="fw-semibold text-center mb-4">Select Your Seats</h5>
 
-      <h5 class="fw-semibold text-center mb-4">Select Your Seats</h5>
+        <!-- SCREEN -->
+        <div class="screen mb-4">SCREEN</div>
 
-      <!-- SCREEN -->
-      <div class="screen mb-4">
-        SCREEN
-      </div>
+        <form method="POST" id="seat-form">
+          {% csrf_token %}
 
-      <form method="POST">
-        {% csrf_token %}
+          <!-- SEAT GRID -->
+          <div class="seat-grid mb-4">
+            {% for seat in seats %}
+              <div class="seat-wrapper">
+                {% if seat.is_booked %}
+                  <div class="seat sold">{{ seat.seat_number }}</div>
+                {% elif seat.is_reserved and seat.reserved_by != user %}
+                  <div class="seat sold">⏳</div>
+                {% else %}
+                  <input type="checkbox" name="seats" value="{{ seat.id }}" id="seat-{{ seat.id }}" class="seat-checkbox" />
+                  <label for="seat-{{ seat.id }}" class="seat">{{ seat.seat_number }}</label>
+                {% endif %}
+              </div>
+            {% endfor %}
+          </div>
 
-        <!-- SEAT GRID -->
-        <div class="seat-grid mb-4">
-          {% for seat in seats %}
-            <div class="seat-wrapper">
-              {% if not seat.is_booked %}
-                <input
-                  type="checkbox"
-                  name="seats"
-                  value="{{ seat.id }}"
-                  id="seat-{{ seat.id }}"
-                  class="seat-checkbox"
-                />
-                <label for="seat-{{ seat.id }}" class="seat">
-                  {{ seat.seat_number }}
-                </label>
-              {% else %}
-                <div class="seat sold">{{ seat.seat_number }}</div>
-              {% endif %}
+          <!-- LEGEND -->
+          <div class="legend mb-4">
+            <div>
+              <span class="seat available"></span> Available
             </div>
-          {% endfor %}
-        </div>
+            <div>
+              <span class="seat selected-demo"></span> Selected
+            </div>
+            <div>
+              <span class="seat sold"></span> Sold
+            </div>
+          </div>
 
-        <!-- LEGEND -->
-        <div class="legend mb-4">
-          <div><span class="seat available"></span> Available</div>
-          <div><span class="seat selected-demo"></span> Selected</div>
-          <div><span class="seat sold"></span> Sold</div>
-        </div>
-
-        <!-- SUBMIT -->
-        <div class="text-center">
-          <button type="submit" class="btn btn-primary btn-lg px-5">
-            Book Selected Seats
-          </button>
-        </div>
-
-      </form>
-
+          <!-- SUBMIT -->
+          <div class="text-center">
+            <button type="button" class="btn btn-success btn-lg px-5" onclick="startPayment()">Pay & Book Seats</button>
+          </div>
+        </form>
+      </div>
     </div>
   </div>
-</div>
 
-<style>
-/* ===== SCREEN ===== */
-.screen {
-  width: 100%;
-  height: 45px;
-  background: linear-gradient(to right, #dbe7ff, #003cff, #dbe7ff);
-  color: #fff;
-  text-align: center;
-  line-height: 45px;
-  font-weight: 600;
-  border-radius: 8px;
-  letter-spacing: 2px;
-}
+  <style>
+    /* ===== SCREEN ===== */
+    .screen {
+      width: 100%;
+      height: 45px;
+      background: linear-gradient(to right, #dbe7ff, #003cff, #dbe7ff);
+      color: #fff;
+      text-align: center;
+      line-height: 45px;
+      font-weight: 600;
+      border-radius: 8px;
+      letter-spacing: 2px;
+    }
+    
+    /* ===== SEAT GRID ===== */
+    .seat-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(36px, 1fr));
+      gap: 10px;
+      justify-content: center;
+      max-width: 420px;
+      margin: auto;
+    }
+    
+    .seat-wrapper {
+      text-align: center;
+    }
+    
+    /* ===== SEATS ===== */
+    .seat {
+      width: 36px;
+      height: 36px;
+      border: 2px solid #003cff;
+      border-radius: 8px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #003cff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+    
+    .seat:hover {
+      background: #003cff;
+      color: #fff;
+      transform: scale(1.1);
+    }
+    
+    /* Hide checkbox */
+    .seat-checkbox {
+      display: none;
+    }
+    
+    /* Selected seat */
+    .seat-checkbox:checked + .seat {
+      background: #003cff;
+      color: #fff;
+      box-shadow: 0 6px 15px rgba(0, 60, 255, 0.4);
+      transform: scale(1.1);
+    }
+    
+    /* Sold */
+    .seat.sold {
+      background: #d3d3d3;
+      border-color: #aaa;
+      color: #777;
+      cursor: not-allowed;
+    }
+    
+    /* ===== LEGEND ===== */
+    .legend {
+      display: flex;
+      justify-content: center;
+      gap: 30px;
+      font-size: 14px;
+    }
+    
+    .legend .seat {
+      width: 18px;
+      height: 18px;
+      border-radius: 5px;
+      margin-right: 6px;
+      display: inline-block;
+    }
+    
+    .available {
+      border: 2px solid #003cff;
+    }
+    
+    .selected-demo {
+      background: #003cff;
+    }
+  </style>
 
-/* ===== SEAT GRID ===== */
-.seat-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(36px, 1fr));
-  gap: 10px;
-  justify-content: center;
-  max-width: 420px;
-  margin: auto;
-}
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
-.seat-wrapper {
-  text-align: center;
-}
-
-/* ===== SEATS ===== */
-.seat {
-  width: 36px;
-  height: 36px;
-  border: 2px solid #003cff;
-  border-radius: 8px;
-  font-size: 12px;
-  font-weight: 600;
-  color: #003cff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all .25s ease;
-}
-
-.seat:hover {
-  background: #003cff;
-  color: #fff;
-  transform: scale(1.1);
-}
-
-/* Hide checkbox */
-.seat-checkbox {
-  display: none;
-}
-
-/* Selected seat */
-.seat-checkbox:checked + .seat {
-  background: #003cff;
-  color: #fff;
-  box-shadow: 0 6px 15px rgba(0,60,255,.4);
-  transform: scale(1.1);
-}
-
-/* Sold */
-.seat.sold {
-  background: #d3d3d3;
-  border-color: #aaa;
-  color: #777;
-  cursor: not-allowed;
-}
-
-/* ===== LEGEND ===== */
-.legend {
-  display: flex;
-  justify-content: center;
-  gap: 30px;
-  font-size: 14px;
-}
-
-.legend .seat {
-  width: 18px;
-  height: 18px;
-  border-radius: 5px;
-  margin-right: 6px;
-  display: inline-block;
-}
-
-.available {
-  border: 2px solid #003cff;
-}
-
-.selected-demo {
-  background: #003cff;
-}
-
-</style>
-
+  <script>
+    function startPayment() {
+      const selectedSeats = document.querySelectorAll('input[name="seats"]:checked')
+    
+      if (selectedSeats.length === 0) {
+        alert('Please select at least one seat')
+        return
+      }
+    
+      document.getElementById('seat-form').submit()
+    }
+  </script>
 {% endblock %}
