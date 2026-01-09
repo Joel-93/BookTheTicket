@@ -19,8 +19,13 @@
       <div class="mb-5">
         <h4 class="fw-semibold mb-3">🎬 Watch Trailer</h4>
 
-        <div class="ratio ratio-16x9 rounded-3 overflow-hidden shadow">
-          <iframe src="{{ movie.get_trailer_embed_url }}" width="100%" height="450" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;">
+          <iframe src="{{ movie.get_trailer_embed_url }}" 
+                  style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;" 
+                  frameborder="0" 
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                  allowfullscreen>
+          </iframe>
         </div>
       </div>
     {% endif %}

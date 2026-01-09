@@ -4,14 +4,14 @@
     <meta charset="UTF-8" />
     <title>
       {% block title %}
-        BookMySeat
+        BookTheTicket
       {% endblock %}
     </title>
     <meta name="viewport" content="width=device-width, initial-scale=1" />
 
     <!-- Bootstrap 5 -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" />
-
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <!-- Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet" />
 
@@ -52,7 +52,7 @@
       <div class="container">
         <a class="navbar-brand d-flex align-items-center gap-2" href="{% url 'home' %}">
           <i class="bi bi-film"></i>
-          BookMySeat
+          BookTheTicket
         </a>
 
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
@@ -107,7 +107,7 @@
       <div class="container">
         <div class="row gy-3">
           <div class="col-md-4">
-            <h6 class="text-white">BookMySeat</h6>
+            <h6 class="text-white">BookTheTicket</h6>
             <p class="small">Book movie tickets easily and enjoy a seamless cinema experience.</p>
           </div>
 
@@ -139,7 +139,7 @@
         <hr class="border-secondary my-3" />
 
         <p class="text-center small mb-0">
-          ©{% now 'Y' %}BookMySeat. All rights reserved.
+          ©{% now 'Y' %}BookTheTicket. All rights reserved.
         </p>
       </div>
     </footer>

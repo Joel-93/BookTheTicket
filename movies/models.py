@@ -54,7 +54,7 @@ class Movie(models.Model):
         video_id = match.group(1)
 
         return (
-            f"https://www.youtube-nocookie.com/embed/{video_id}"
+            f"https://www.youtube.com/embed/{video_id}"
             f"?rel=0&modestbranding=1"
         )
 

@@ -151,14 +151,24 @@ def payment_success(request):
 
     # EMAIL (reuse your existing email logic)
     if booked_seats:
+        # Calculate total amount (₹200 per seat)
+        total_amount = len(booked_seats) * 200
+        
+        # Get booking IDs
+        booking_ids = [str(booking.id) for booking in Booking.objects.filter(
+            user=request.user, 
+            seat__in=Seat.objects.filter(id__in=seat_ids)
+        ).order_by('-booked_at')[:len(booked_seats)]]
+        
         subject = "🎟 Ticket Booking Confirmation"
         html = render_to_string("movies/booking_email.html", {
             "user": request.user,
             "movie": theater.movie,
             "theater": theater,
             "seats": ", ".join(booked_seats),
-            "booking_date": timezone.now()
-
+            "booking_date": timezone.now(),
+            "booking_ids": ", ".join(booking_ids),
+            "total_amount": total_amount,
         })
 
         email = EmailMultiAlternatives(
@@ -173,46 +183,4 @@ def payment_success(request):
     return redirect("profile")
 
 
-@staff_member_required
-def admin_dashboard(request):
-    # Total bookings
-    total_bookings = Booking.objects.count()
-
-    # Revenue (₹200 per booking)
-    SEAT_PRICE = 200
-    total_revenue = total_bookings * SEAT_PRICE
-
-    # Most popular movie
-    popular_movie = (
-        Booking.objects
-        .values("movie__name")
-        .annotate(count=Count("id"))
-        .order_by("-count")
-        .first()
-    )
-
-    # Busiest theater
-    busiest_theater = (
-        Booking.objects
-        .values("theater__name")
-        .annotate(count=Count("id"))
-        .order_by("-count")
-        .first()
-    )
-
-    # Recent bookings
-    recent_bookings = Booking.objects.select_related(
-        "movie", "theater", "user"
-    ).order_by("-booked_at")[:10]
-
-    return render(
-        request,
-        "movies/admin_dashboard.html",
-        {
-            "total_bookings": total_bookings,
-            "total_revenue": total_revenue,
-            "popular_movie": popular_movie,
-            "busiest_theater": busiest_theater,
-            "recent_bookings": recent_bookings,
-        }
-    )
+    return redirect("profile")

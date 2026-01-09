@@ -40,16 +40,7 @@
 <!-- 🔥 HERO + ADMIN BUTTON -->
 <div class="position-relative">
 
-  <!-- 🔐 ADMIN BUTTON -->
-  {% if user.is_staff %}
-    <a href="{% url 'admin_dashboard' %}" class="btn btn-dark admin-btn">
-      Admin Dashboard
-    </a>
-  {% else %}
-    <a href="{% url 'admin_login' %}" class="btn btn-outline-dark admin-btn">
-      Admin Login
-    </a>
-  {% endif %}
+
 
   <!-- 🔥 HERO CAROUSEL -->
   <div id="mainCarousel" class="carousel slide mb-4" data-bs-ride="carousel">

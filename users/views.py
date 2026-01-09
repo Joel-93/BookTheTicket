@@ -117,4 +117,45 @@ def admin_login(request):
 
 @user_passes_test(is_admin, login_url='/admin/login/')
 def admin_dashboard(request):
-    return render(request, 'users/admin_dashboard.html')
+    from django.db.models import Count
+    from movies.models import Booking
+    
+    # Total bookings
+    total_bookings = Booking.objects.count()
+
+    # Revenue (₹200 per booking)
+    SEAT_PRICE = 200
+    total_revenue = total_bookings * SEAT_PRICE
+
+    # Most popular movie
+    popular_movie_data = (
+        Booking.objects
+        .values("movie__name")
+        .annotate(count=Count("id"))
+        .order_by("-count")
+        .first()
+    )
+    popular_movie = popular_movie_data['movie__name'] if popular_movie_data else None
+
+    # Busiest theater
+    busiest_theater_data = (
+        Booking.objects
+        .values("theater__name")
+        .annotate(count=Count("id"))
+        .order_by("-count")
+        .first()
+    )
+    busiest_theater = busiest_theater_data['theater__name'] if busiest_theater_data else None
+
+    # Recent bookings
+    recent_bookings = Booking.objects.select_related(
+        "movie", "theater", "user"
+    ).order_by("-booked_at")[:10]
+
+    return render(request, 'users/admin_dashboard.html', {
+        "total_bookings": total_bookings,
+        "total_revenue": total_revenue,
+        "popular_movie": popular_movie,
+        "busiest_theater": busiest_theater,
+        "recent_bookings": recent_bookings,
+    })
